@@ -1,0 +1,9 @@
+<section>
+    <h2>There are {{restaurants.length}} restaurants</h2>
+    {{#each restaurants}} {{!-- for each sauces in sauces, create the following html --}}
+    <article class = "clearfix item-container block">
+        <h2>{{name}}</h2>
+        <h3>{{location}}</h3>
+    </article>
+    {{/each}}
+</section>
