@@ -50,8 +50,8 @@ seedDb()
 app.get('/sauces', async (req, res) => {
   const sauces = await Sauce.findAll()
   res.render('sauces', { sauces }) //2 arguments: string name of the template, data to enter
-  console.log('normal', sauces)
-  console.log('destructured', { sauces })
+  // console.log('normal', sauces)
+  // console.log('destructured', { sauces })
 })
 
 app.get('/sauces/:id', async (req, res) => {
@@ -64,17 +64,36 @@ app.get('/sauces/:id', async (req, res) => {
 
 app.get('/restaurants', async (req, res) => {
   const restaurants = await Restaurant.findAll()
-  console.log(restaurants)
+  // console.log(restaurants)
   res.render('restaurants', { restaurants })
 })
 
+app.get('/restaurants/:id', async (req, res) => {
+  const restaurant = await Restaurant.findByPk(req.params.id)
+  console.log(restaurant.name)
+  res.render('restaurant', { restaurant })
+})
+
+// The two below have a similar function but do it in different ways.
 app.get('/restaurant/sauces/:resId/:sauceId', async (req, res) => {
   const restaurant = await Restaurant.findByPk(req.params.resId)
   const sauce = await Sauce.findByPk(req.params.sauceId)
   await restaurant.addSauce(sauce)
-  const sauces = await restaurant.getSauces()
+  const sauces = await Restaurant.findByPk(req.params.resId, {
+    include: {
+      model: Sauce
+    }
+  })
   res.render('res_sauce', { sauces })
 })
+
+// app.get('/restaurant/sauces/:resId/:sauceId', async (req, res) => {
+//   const restaurant = await Restaurant.findByPk(req.params.resId)
+//   const sauce = await Sauce.findByPk(req.params.sauceId)
+//   await restaurant.addSauce(sauce)
+//   const sauces = await restaurant.getSauces()
+//   res.render('res_sauce', { sauces })
+// })
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
